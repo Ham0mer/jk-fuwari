@@ -3,7 +3,6 @@ title: Steam Web API简易使用介绍
 published: 2025-10-07
 description: 'Steam Web API使用方法详解，包含接口格式、参数说明及常用功能示例'
 image: '/IMG/steamapi.jpg'
-pinned: true
 tags: ['Steam','API']
 category: '工具'
 draft: false 
