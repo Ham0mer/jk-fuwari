@@ -4,7 +4,7 @@ published: 2025-10-08 21:00:00
 description: '本教程详细介绍如何为Fuwari博客主题添加文章置顶功能，包括修改排序逻辑、配置文件和显示标签的完整步骤。'
 image: ''
 tags: ['fuwari']
-category: 'fuwari'
+category: '教程'
 draft: false 
 lang: ''
 ---

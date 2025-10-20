@@ -4,7 +4,7 @@ published: 2025-10-19T11:40:19
 description: '白嫖挂卡工具，随时随地控制ASF挂卡'
 image: '/IMG/claw-02.png'
 tags: ['ClawCloud', 'ASF', 'TG机器人']
-category: 'ClawCloud'
+category: '教程'
 draft: false 
 lang: 'zh-CN'
 ---

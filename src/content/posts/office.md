@@ -4,7 +4,7 @@ published: 2025-09-06
 description: 'Office 365管理员常用配置链接汇总'
 image: '/IMG/Office.jpg'
 tags: ['Office']
-category: 'Office'
+category: '工具'
 draft: false 
 lang: ''
 ---

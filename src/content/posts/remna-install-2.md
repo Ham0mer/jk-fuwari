@@ -5,7 +5,7 @@ description: 'Remna节点管理面板Docker部署及节点配置教程'
 image: '/IMG/re-01.webp'
 pinned: true
 tags: ['Remna','节点管理面板','Docker','节点配置']
-category: 'Remna'
+category: '教程'
 draft: false 
 lang: 'zh-CN'
 ---
