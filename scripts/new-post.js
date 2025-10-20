@@ -50,6 +50,7 @@ title: ${args[0]}
 published: ${getDate()}
 description: ''
 image: ''
+pinned: false
 tags: []
 category: ''
 draft: false 
