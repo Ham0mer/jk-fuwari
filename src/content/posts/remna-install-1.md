@@ -14,6 +14,8 @@ lang: 'zh-CN'
 这是秒杀一切的面板，它可以帮助你管理你的节点，包括节点的状态、节点的配置、节点的日志等。
 :::
 
+面板官网：[https://remna.st/](https://remna.st/)
+
 ## 安装Docker
 
 使用官方脚本安装 Docker
