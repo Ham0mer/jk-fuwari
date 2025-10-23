@@ -2,7 +2,7 @@
 title: ClawCloud Run免费容器部署ASF云挂卡和TG机器人控制端
 published: 2025-10-19T11:40:19
 description: '白嫖挂卡工具，随时随地控制ASF挂卡'
-image: '/IMG/claw-cloud-asf/02.png'
+image: '/IMG/claw-cloud-asf/04.png'
 tags: ['ClawCloud', 'ASF', 'TG机器人']
 category: '教程'
 draft: false 
