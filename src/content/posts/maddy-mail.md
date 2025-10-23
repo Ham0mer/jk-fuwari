@@ -2,7 +2,7 @@
 title: 邮件服务器命令
 published: 2025-09-06
 description: 'maddy邮件服务器的基本操作命令指南，包括创建邮箱用户、设置密码、创建存储账户、查看账户列表、管理邮箱分类以及测试邮件接收等容器环境下的常用操作。'
-image: '/IMG/mail.jpg'
+image: '/IMG/maddy-mail.jpg'
 tags: ['mail']
 category: '工具'
 draft: false 

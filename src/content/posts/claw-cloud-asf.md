@@ -2,7 +2,7 @@
 title: ClawCloud Run免费容器部署ASF云挂卡和TG机器人控制端
 published: 2025-10-19T11:40:19
 description: '白嫖挂卡工具，随时随地控制ASF挂卡'
-image: '/IMG/claw-02.png'
+image: '/IMG/claw-cloud-asf/02.png'
 tags: ['ClawCloud', 'ASF', 'TG机器人']
 category: '教程'
 draft: false 
@@ -33,7 +33,7 @@ ClawCloud 是一家新加坡的主机服务商，最近推出了 ClawCloud Run �
 
 填写完成后点击 Deploy Application。
 
-![clawcloud-run-create-app.png](/IMG/claw-01.png)
+![clawcloud-run-create-app.png](/IMG/claw-cloud-asf/01.png)
 
 ### 上传配置文件
 在电脑新建一个文件，命名为 ASF.json。
@@ -61,7 +61,7 @@ ClawCloud 是一家新加坡的主机服务商，最近推出了 ClawCloud Run �
 
 将两个文件上传到`/app/config`目录下。重启容器，浏览器访问Public Address 可以看到控制页面。
 
-![clawcloud-run-ipc.png](/IMG/claw-02.png)
+![clawcloud-run-ipc.png](/IMG/claw-cloud-asf/02.png)
 
 填入上方的IPCPassword，即可登录页面。
 
@@ -71,7 +71,7 @@ ClawCloud 是一家新加坡的主机服务商，最近推出了 ClawCloud Run �
 
 ### 修改Public Address
 将https修改为tcp，价格会达到每天0.09刀，每月2.7刀
-![clawcloud-run-tcp.png](/IMG/claw-03.png)
+![clawcloud-run-tcp.png](/IMG/claw-cloud-asf/03.png)
 
 ### 配置TG机器人
 机器需要的配置文件

@@ -2,12 +2,12 @@
 title: "[测评]绿云东京Softbank"
 published: 2025-10-20T20:37:58
 description: '测评绿云东京Softbank三年付翻倍机器'
-image: '/IMG/greencloudvps.webp'
+image: '/IMG/greencloud-25d.webp'
 pinned: false
 tags: ['绿云', 'Softbank']
 category: '测评'
 draft: false 
-lang: ''
+lang: 'zh-CN'
 ---
 
 官网：[https://greencloudvps.com](https://greencloudvps.com)

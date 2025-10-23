@@ -2,7 +2,7 @@
 title: "[进阶]Remna节点管理面板-落地篇"
 published: 2025-10-23T18:57:09
 description: '落地篇是指在Remna节点管理面板中配置落地节点，用于转发流量。'
-image: '/IMG/re-01.webp'
+image: '/IMG/remna-install-2/01.webp'
 pinned: false
 tags: ['Remna', '节点管理面板', '落地篇']
 category: '教程'
@@ -24,17 +24,18 @@ lang: 'zh-CN'
  - 密码：开启
  - 用户名：testuser
  - 密码：testpwd
-![新建socks5入站](/IMG/rem-3-1.png)
+
+![新建socks5入站](/IMG/remna-install-3/1.png)
 
 ### 快捷获取出站配置
 
 左侧导航栏 `Xray设置`->`出站规则`->`添加出站` ，这里就有老铁问了，我落地鸡添加什么出站？
-其实是利用3xui的工具来获取配置参数，不用快捷工具还手搓这简直唐的没边了！
-![快捷获取出站配置](/IMG/rem-3-2.png)
+其实是利用3xui的工具来获取配置参数，不用快捷工具徒手搓这简直唐的没边了！
+![快捷获取出站配置](/IMG/remna-install-3/2.png)
 填入刚刚新建的socks5入站配置参数
-![填入刚刚新建的socks5入站配置参数](/IMG/rem-3-3.png)
+![填入刚刚新建的socks5入站配置参数](/IMG/remna-install-3/3.png)
 点击 `JSON`选项卡，复制出配置参数
-![复制出配置参数](/IMG/rem-3-4.png)
+![复制出配置参数](/IMG/remna-install-3/4.png)
 
 ```json title="落地鸡出站配置"
 {
@@ -62,7 +63,7 @@ lang: 'zh-CN'
 ## 修改Remna节点配置
 
 先进入Xray设置
-![Xray设置](/IMG/rem-3-5.png)
+![Xray设置](/IMG/remna-install-3/5.png)
 
 ```json title="Profile" ins={50-67,79-85} collapse={8-46,88-104}
 {
