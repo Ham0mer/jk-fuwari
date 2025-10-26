@@ -65,22 +65,22 @@ export const profileConfig: ProfileConfig = {
 	bio: "爱国 敬业 诚信 友善",
 	links: [
 		{
-			name: "Steam",
+			name: "游戏",
 			icon: "fa6-brands:steam",
 			url: "https://steamcommunity.com/profiles/76561198887857717/",
 		},
-		// {
-		// 	name: "Twitter",
-		// 	icon: "fa6-brands:twitter", // Visit https://icones.js.org/ for icon codes
-		// 	// You will need to install the corresponding icon set if it's not already included
-		// 	// `pnpm add @iconify-json/<icon-set-name>`
-		// 	url: "https://twitter.com",
-		// },
-		// {
-		// 	name: "GitHub",
-		// 	icon: "fa6-brands:github",
-		// 	url: "https://github.com/saicaca/fuwari",
-		// },
+		{
+			name: "状态",
+			icon: "majesticons:status-online-line", // Visit https://icones.js.org/ for icon codes
+			// You will need to install the corresponding icon set if it's not already included
+			// `pnpm add @iconify-json/<icon-set-name>`
+			url: "https://status.jk.sb/",
+		},
+		{
+			name: "探针",
+			icon: "solar:server-path-outline",
+			url: "https://server.jk.sb/",
+		},
 	],
 };
 
