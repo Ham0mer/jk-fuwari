@@ -20,9 +20,5 @@ lang: ''
 | MicroSoft | http://www.msftconnecttest.com/connecttest.txt | 5 | 10 | 200/error | 4 |
 | Cloudflare | http://cp.cloudflare.com/ | 4 | 10 | 204/204 | 4+6 |
 | Firefox | http://detectportal.firefox.com/success.txt | 5 | 10 | 200/200 | 4+6 |
-| V2ex | http://www.v2ex.com/generate_204 | 0 | 10 | 204/301 | 4+6 |
-| 小米 | http://connect.rom.miui.com/generate_204 | 10 | 4 | 204/204 | 4 |
-| 华为 | http://connectivitycheck.platform.hicloud.com/generate_204 | 10 | 5 | 204/204 | 4 |
-| Vivo | http://wifi.vivo.com.cn/generate_204 | 10 | 5 | 204/204 | 4 |
 
 体验目前仅进行粗略测试延迟，大概率实际不符，仅作参考。
