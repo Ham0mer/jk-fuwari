@@ -24,6 +24,7 @@ Usage: npm run new-post -- <filename>`)
 }
 
 let fileName = args[0]
+const hasImgFlag = args.includes("img")
 
 // Add .md extension if not present
 const fileExtensionRegex = /\.(md|mdx)$/i
@@ -45,8 +46,23 @@ if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true })
 }
 
+const postBaseName = path.basename(fileName, path.extname(fileName))
+if (hasImgFlag) {
+  let imgDirName = postBaseName
+  if (postBaseName.toLowerCase() === "index") {
+    imgDirName = path.basename(path.dirname(fullPath))
+  }
+  const imgDirPath = path.join("public", "IMG", imgDirName)
+  if (!fs.existsSync(imgDirPath)) {
+    fs.mkdirSync(imgDirPath, { recursive: true })
+    console.log(`Image folder ${imgDirPath} created`)
+  } else {
+    console.log(`Image folder ${imgDirPath} already exists`)
+  }
+}
+
 const content = `---
-title: ${args[0]}
+title: ${postBaseName}
 published: ${getDate()}
 description: ''
 image: ''
@@ -58,6 +74,6 @@ lang: ''
 ---
 `
 
-fs.writeFileSync(path.join(targetDir, fileName), content)
+fs.writeFileSync(fullPath, content)
 
 console.log(`Post ${fullPath} created`)
