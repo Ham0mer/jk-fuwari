@@ -48,8 +48,8 @@ importers:
         specifier: ^1.2.4
         version: 1.2.4
       '@iconify-json/material-symbols':
-        specifier: ^1.2.42
-        version: 1.2.42
+        specifier: ^1.2.43
+        version: 1.2.43
       '@iconify/svelte':
         specifier: ^4.2.0
         version: 4.2.0(svelte@5.41.1)
@@ -1105,8 +1105,8 @@ packages:
   '@iconify-json/majesticons@1.2.4':
     resolution: {integrity: sha512-8h6zfqN/8eKLNGcHzJd8LZ+vI6aC2MIGq+QTNoYD/H98TL1N/s8ufxal54OkzIsemylXxWLj+NLd0wXDLlVIIg==}
 
-  '@iconify-json/material-symbols@1.2.42':
-    resolution: {integrity: sha512-FDRfnQqy8iXaq/swVPFWaHftqP9tk3qDCRhC30s3UZL2j4mvGZk5gVECRXCkZv5jnsAiTpZxGQM8HrMiwE7GtA==}
+  '@iconify-json/material-symbols@1.2.43':
+    resolution: {integrity: sha512-Atn0KzZkk96vZuSA//BEzwd9we8FUbifNIWxS9+ngPbWsZEKv1WAe+Gxle8BQjvnfIpewCP1opIeHKMxcNEmPw==}
 
   '@iconify-json/solar@1.2.4':
     resolution: {integrity: sha512-ruAh+bbYimlzqXW6MtqmvWlfatvFjE7o1fZWieps1h42Dx7AaHu4Z/dgOYSO1RR4MIhNzD+2xgEbFjASgBcEyg==}
@@ -6455,7 +6455,7 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/material-symbols@1.2.42':
+  '@iconify-json/material-symbols@1.2.43':
     dependencies:
       '@iconify/types': 2.0.0
 
