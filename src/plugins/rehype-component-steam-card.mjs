@@ -29,7 +29,7 @@ export function SteamCardComponent(properties, children) {
 
 	// Create avatar element
 	const nAvatar = h(`div#${cardUuid}-avatar`, { class: "sc-avatar" });
-	
+
 	// Create name element
 	const nUsername = h(
 		`span#${cardUuid}-username`,
@@ -49,36 +49,21 @@ export function SteamCardComponent(properties, children) {
 		h("div", { class: "sc-titlebar-left" }, [
 			h("div", { class: "sc-user-info" }, [
 				nAvatar,
-				h("div", { class: "sc-user-details" }, [
-					nUsername,
-					nStatus
-				])
-			])
-		])
+				h("div", { class: "sc-user-details" }, [nUsername, nStatus]),
+			]),
+		]),
 	]);
 
 	// (description element removed)
 
 	// Right-side game artwork (hidden until image is loaded)
-	const nGameArt = h(
-		`div#${cardUuid}-gameart`,
-		{ class: "sc-gameart" },
-		"",
-	);
+	const nGameArt = h(`div#${cardUuid}-gameart`, { class: "sc-gameart" }, "");
 
 	// Create game info element
-	const nGameInfo = h(
-		`div#${cardUuid}-gameinfo`,
-		{ class: "sc-gameinfo" },
-		"",
-	);
+	const nGameInfo = h(`div#${cardUuid}-gameinfo`, { class: "sc-gameinfo" }, "");
 
 	// Create country flag element
-	const nCountry = h(
-		`div#${cardUuid}-country`,
-		{ class: "sc-country" },
-		"",
-	);
+	const nCountry = h(`div#${cardUuid}-country`, { class: "sc-country" }, "");
 
 	// Create script to fetch and populate Steam data
 	const nScript = h(
@@ -173,11 +158,11 @@ export function SteamCardComponent(properties, children) {
 			rel: "noopener noreferrer",
 			steamId,
 		},
-			[
-				nGameArt,
-				nTitle,
-				h("div", { class: "sc-infobar" }, [nGameInfo, nCountry]),
-				nScript,
-			],
+		[
+			nGameArt,
+			nTitle,
+			h("div", { class: "sc-infobar" }, [nGameInfo, nCountry]),
+			nScript,
+		],
 	);
 }
