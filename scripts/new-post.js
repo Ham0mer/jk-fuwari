@@ -70,7 +70,7 @@ pinned: false
 tags: []
 category: ''
 draft: false 
-lang: ''
+lang: 'zh-CN'
 ---
 `
 

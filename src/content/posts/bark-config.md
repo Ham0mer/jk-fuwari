@@ -1,13 +1,13 @@
 ---
 title: Bark推送配置生成器
 published: 2025-11-09T15:22:45
-description: ''
+description: '一键配置省时省力'
 image: ''
 pinned: false
-tags: []
-category: ''
+tags: ['Bark','配置生成']
+category: '工具'
 draft: false 
-lang: ''
+lang: 'zh-CN'
 ---
 ## 前言
 我是很喜欢使用这个软件的推送，但是每次新的推送都需要去打开官方文档去看配置参数，所有就有了这个项目！
