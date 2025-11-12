@@ -1,10 +1,10 @@
 ---
-title: "[进阶]Remna节点管理面板-落地篇"
+title: "[进阶]Remnawave节点管理面板-落地篇"
 published: 2025-10-23T18:57:09
-description: '落地篇是指在Remna节点管理面板中配置落地节点，用于转发流量。'
+description: '落地篇是指在Remnawave节点管理面板中配置落地节点，用于转发流量。'
 image: '/IMG/remna-install-2/01.webp'
 pinned: true
-tags: ['Remna', '节点管理面板', '落地篇']
+tags: ['Remnawave', '节点管理面板', '落地篇']
 category: '教程'
 draft: false 
 lang: 'zh-CN'
