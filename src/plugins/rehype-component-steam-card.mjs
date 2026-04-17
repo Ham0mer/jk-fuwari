@@ -70,19 +70,20 @@ export function SteamCardComponent(properties, children) {
 		`script#${cardUuid}-script`,
 		{ type: "text/javascript", defer: true },
 		`
-      fetch('https://o.jk.sb/steam/profile/${steamId}', { referrerPolicy: "no-referrer" })
+      fetch('https://api.jk.sb/v1/steam/profile/${steamId}', { referrerPolicy: "no-referrer" })
         .then(response => response.json())
         .then(data => {
           // Handle the data structure from the API
           const userData = data.data && data.data.length > 0 ? data.data[0] : null;
           
-	        if (!userData) {
-	            return;
-	          }
-          // Update username
+          if (!userData) {
+            return;
+          }
+          
+          
+          
           document.getElementById('${cardUuid}-username').innerText = userData.personaname || "Unknown User";
           
-          // Update status
           const statusText = userData.personastate === 1 ? "Online" : 
                             userData.personastate === 2 ? "Busy" : 
                             userData.personastate === 3 ? "Away" : 
@@ -91,10 +92,10 @@ export function SteamCardComponent(properties, children) {
                             userData.personastate === 6 ? "Looking to play" : "Offline";
           document.getElementById('${cardUuid}-status').innerText = statusText;
           
-          // Update avatar
           const avatarEl = document.getElementById('${cardUuid}-avatar');
-          if (userData.avatarfull) {
-            avatarEl.style.backgroundImage = 'url(' + userData.info.avatarUrl + ')';
+          const avatarUrl = userData.avatarfull || userData.avatarmedium || userData.avatar;
+          if (avatarUrl) {
+            avatarEl.style.backgroundImage = 'url(' + avatarUrl + ')';
             avatarEl.style.backgroundColor = 'transparent';
           }
           
@@ -113,7 +114,7 @@ export function SteamCardComponent(properties, children) {
           }
 	          // Fetch and apply game artwork on the right side
           if (userData.gameid) {
-            fetch('https://o.jk.sb/steam/imageurl2base64/' + userData.gameid, { referrerPolicy: "no-referrer" })
+            fetch('https://api.jk.sb/v1/steam/game-image/' + userData.gameid, { referrerPolicy: "no-referrer" })
               .then(response => response.json())
               .then(imageData => {
                 const artEl = document.getElementById('${cardUuid}-gameart');

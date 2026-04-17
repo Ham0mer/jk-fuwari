@@ -47,13 +47,8 @@ export const navBarConfig: NavBarConfig = {
 		LinkPreset.About,
 		LinkPreset.Friends,
 		{
-			name: "云盘",
-			url: "https://boxlist.dev", // Internal links should not include the base path, as it is automatically added
-			external: true, // Show an external link icon and will open in a new tab
-		},
-		{
-			name: "Bark",
-			url: "https://bark.jk.sb/", // Internal links should not include the base path, as it is automatically added
+			name: "探针",
+			url: "https://server.jk.sb/", // Internal links should not include the base path, as it is automatically added
 			external: true, // Show an external link icon and will open in a new tab
 		},
 	],
@@ -77,9 +72,9 @@ export const profileConfig: ProfileConfig = {
 			url: "https://status.jk.sb/",
 		},
 		{
-			name: "探针",
-			icon: "solar:server-path-outline",
-			url: "https://server.jk.sb/",
+			name: "网盘",
+			icon: "dashicons:cloud",
+			url: "https://list.jk.sb/",
 		},
 	],
 };
