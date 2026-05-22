@@ -3,141 +3,254 @@ title: Steam Web API简易使用介绍
 published: 2025-10-07
 description: 'Steam Web API使用方法详解，包含接口格式、参数说明及常用功能示例'
 image: '/IMG/steamapi.jpg'
-tags: ['Steam','API']
+tags: ['Steam', 'API']
 category: '工具'
-draft: false 
-lang: 'zh_CN'
+draft: false
+lang: 'zh-CN'
 ---
 
-最近想更新下关于页面的Steam展示组件，记录一下Steam Web API的使用方法
-### 勋章
-`https://store.steampowered.com/replay/76561198887857717/2024`
+最近想更新关于页面的 Steam 展示组件，记录一下 Steam Web API 的使用方法。官方文档地址：[steamcommunity.com/dev](https://steamcommunity.com/dev)，第三方可视化文档：[steamapi.xpaw.me](https://steamapi.xpaw.me/)
 
-## 便捷接口
+---
 
-### 个人信息
-`https://o.jk.sb/steam/profile/76561198887857717`
+## 准备工作
 
-### 游戏库存
-`https://o.jk.sb/steam/games/76561198887857717`
+### 1. 申请 API Key
 
-### 最近游玩
-count 为可选参数如果count为空则默认为5.
+打开 [Steam API Key 申请页面](https://steamcommunity.com/dev/apikey)，登录后填写域名（随意填写，如 `localhost`），即可获得密钥。下文用 `XXXXXX` 代替。
 
-`https://o.jk.sb/steam/recentlyplayed/76561198887857717`
+:::warning
+API Key 是私密凭证，请勿公开或提交到代码仓库。
+:::
 
-### 最近游玩（指定数量）
+### 2. 查询 SteamID64
 
-count = 3
+Steam 使用 64 位 ID 唯一标识用户，有以下几种方式查询：
 
-`https://o.jk.sb/steam/recentlyplayed/76561198887857717/3`
+- [SteamDB 计算器](https://steamdb.info/calculator/)：用 Steam 账号登录或输入社区昵称查询
+- [steamid.io](https://steamid.io/)：输入任意格式 Steam ID 互转
+- `ResolveVanityURL` 接口：通过自定义 URL 解析（见下文）
 
-### 游戏成就
-appid 为游戏或软件的ID。
+下文用 `123456` 代替 SteamID64，用 `000000` 代替游戏 AppID。
 
-`https://o.jk.sb/steam/achievements/76561198887857717/275850`
-
-### 游戏封面
-
-base64 编码的游戏封面图片。
-
-`https://o.jk.sb/steam/imageurl2base64/275850`
-
+---
 
 ## 接口格式
 
-Steam Web API的统一形式如下：
+Steam Web API 的统一请求格式：
 
-`http(s)://api.steampowered.com/$interface/$method/v$version/?appid=$appid&key=$key&steamids=$userid&format=$format`
+```
+https://api.steampowered.com/{interface}/{method}/v{version}/?key=XXXXXX&{params}
+```
 
-http与https都能使用。但是体感前者更快。
-以下是参数用法：
+| 参数 | 说明 |
+|------|------|
+| `interface` | API 分类，如 `ISteamUser`、`IPlayerService` |
+| `method` | 具体功能，如 `GetPlayerSummaries` |
+| `version` | 版本号，通常为 `v1` 或 `v2`，写 `v1` 与 `v0001` 均可 |
+| `key` | 您的 API Key |
+| `format` | 可选，返回格式：`json`（默认）、`xml`、`vdf` |
 
-### interface
-Steam Web API太多，接口可以看做是API的分类。
+:::tip
+http 和 https 均可使用。`key` 参数必须传递，否则大多数接口会返回错误。
+:::
 
-### method
-方法即具体API功能，想要的功能可以在文档里查到。下文会列举一些常用API。
+查询当前 Key 可用的所有 API：
 
-### version
-大部分API的版本是v1，少数存在v2。格式写v1与v0001均可。
+```
+https://api.steampowered.com/ISteamWebAPIUtil/GetSupportedAPIList/v1/?key=XXXXXX
+```
 
-appid
-有些功能需要指定游戏ID，可以在商店页面或SteamDB查到。下文用000000代替。
+---
 
-### key
-使用Steam Web API需要注册一个密钥。打开密钥申请页面([https://steamcommunity.com/dev/apikey](https://steamcommunity.com/dev/apikey))，登录之后按提示操作可以获取自己的密钥，下文用XXXXXX代替。
+## 用户相关 API
 
+### 用户基本信息
 
-### steamids
-填写自己的64位ID。不知道可以去SteamDB([https://steamdb.info/calculator/](https://steamdb.info/calculator/))查询。用Steam账号登录或输入社区昵称即可查询。下文用123456代替。
+获取昵称、头像、在线状态、国家、创建时间等。`steamids` 支持逗号分隔传入多个 ID。
 
+```
+https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=XXXXXX&steamids=123456
+```
 
-### format
-获取的数据形式有3种可选：
-`json`：缺省值。获取JSON格式数据。
-`xml`：获取XML格式数据。
-`vdf`：获取Valve的数据格式。这个是阀门公司自己的文件格式，具体介绍见官方文档。
+### 自定义 URL 解析 SteamID
 
-## 常用API
+通过用户设置的自定义社区 URL 解析出 SteamID64：
 
-使用之前要公开社区信息，否则获取的数据不正常。不同的密钥可以访问的API不同。目前我只知道有开发者与玩家之别，其他还不知道。自己可以用的API可以从以下接口查询：
-
-`http://api.steampowered.com/ISteamWebAPIUtil/GetSupportedAPIList/v1/?key=XXXXXX&steamids=123456`
-
-其中有该key可用的所有API信息。包括interface、method、version和描述等。
-
-### 用户信息
-`http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=XXXXXX&steamids=123456`
-
-其实v1和v2获取的信息一样。获取昵称、头像、在线状态等基础数据。
-
-### 游戏库存
-`http://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=XXXXXX&steamid=123456`
-
-获取库存总数与所有库存内容。* Steam曾经清理过一些低质量游戏，这些游戏不计入游戏总数，但在该接口中是计入并列出的。
-
-### 最近游玩
-`http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1/?key=XXXXXX&steamid=123456`
-
-获取两周内的使用信息。包括产品名称、ID、图标、图片和游玩时间等内容。与Steam社区主页下方的最新动态一样。最后游玩的游戏会排在最前面。
-
-### 使用时间
-`http://api.steampowered.com/IPlayerService/ClientGetLastPlayedTimes/v1/?key=XXXXXX`
-
-获取所有产品的使用时间。包括总时间，最近使用的时间（两周），在windows、linux、mac等平台分别的使用时间。
-
-### 社区等级
-`http://api.steampowered.com/IPlayerService/GetSteamLevel/v1/?key=XXXXXX&steamid=123456`
-
-获取社区等级。没错，只能获取等级。
+```
+https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=XXXXXX&vanityurl=gaben
+```
 
 ### 好友列表
-`http://api.steampowered.com/ISteamUser/GetFriendList/v1/?key=XXXXXX&steamid=123456`
 
-获取好友列表与成为好友的时间。
+获取好友列表及成为好友的时间（UNIX 时间戳）：
+
+```
+https://api.steampowered.com/ISteamUser/GetFriendList/v1/?key=XXXXXX&steamid=123456
+```
 
 ### 组列表
-`http://api.steampowered.com/ISteamUser/GetUserGroupList/v1/?key=XXXXXX&steamid=123456`
 
-获取加入的组列表。
+获取用户加入的 Steam 组：
 
-### 徽章列表
-`http://api.steampowered.com/IPlayerService/GetBadges/v1/?key=XXXXXX&steamid=123456`
-
-获取所有获得的徽章的详细信息。
+```
+https://api.steampowered.com/ISteamUser/GetUserGroupList/v1/?key=XXXXXX&steamid=123456
+```
 
 ### 封禁记录
-`http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key=XXXXXX&steamids=123456`
 
-获取VAC封禁信息。
+查询 VAC 封禁、游戏封禁信息，`steamids` 支持多个 ID：
 
-### 成就信息
-`http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=XXXXXX&steamid=123456&appid=000000`
+```
+https://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key=XXXXXX&steamids=123456
+```
 
-获取指定游戏或软件的成就信息。必须指定产品ID才能获取信息。
+---
 
-### 游戏图片
-`https://shared.st.dl.eccdnx.com/store_item_assets/steam/apps/{appid}/header.jpg`
+## 游戏库与游玩相关 API
 
-获取游戏或软件的图片。{appid}为产品ID。
+### 游戏库存
+
+获取用户拥有的所有游戏及游玩时间。添加 `include_appinfo=1` 可在响应中包含游戏名称和图标：
+
+```
+https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=XXXXXX&steamid=123456&include_appinfo=1
+```
+
+:::tip
+Steam 曾清理过部分低质量游戏，这些游戏不计入用户主页的游戏总数，但此接口仍会列出。
+:::
+
+### 最近游玩
+
+获取两周内游玩过的游戏，包含游戏名、AppID、图标和游玩时间。可选参数 `count` 限制返回数量：
+
+```
+https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1/?key=XXXXXX&steamid=123456&count=5
+```
+
+### 所有游戏使用时长
+
+获取所有产品的总游玩时间，以及在 Windows/Linux/Mac 各平台的分别时长：
+
+```
+https://api.steampowered.com/IPlayerService/ClientGetLastPlayedTimes/v1/?key=XXXXXX
+```
+
+---
+
+## 等级与徽章 API
+
+### 社区等级
+
+```
+https://api.steampowered.com/IPlayerService/GetSteamLevel/v1/?key=XXXXXX&steamid=123456
+```
+
+### 徽章列表
+
+获取所有已获得徽章的详情，包括徽章 ID、等级、经验值、解锁时间等：
+
+```
+https://api.steampowered.com/IPlayerService/GetBadges/v1/?key=XXXXXX&steamid=123456
+```
+
+---
+
+## 成就相关 API
+
+### 玩家成就
+
+获取指定游戏中玩家的成就完成情况（必须指定 AppID）：
+
+```
+https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=XXXXXX&steamid=123456&appid=000000
+```
+
+### 全球成就完成率
+
+无需 Key，获取某款游戏所有成就在全球玩家中的完成百分比：
+
+```
+https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v2/?gameid=000000
+```
+
+### 游戏统计数据定义
+
+获取游戏开发者定义的成就和统计数据结构：
+
+```
+https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=XXXXXX&appid=000000
+```
+
+---
+
+## 游戏信息 API
+
+### 游戏新闻
+
+获取指定游戏的最新公告，可控制数量和内容长度：
+
+```
+https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=000000&count=5&maxlength=500
+```
+
+### 商店详情（非官方 Store API）
+
+获取游戏详细信息，包括简介、价格、类型、标签、系统需求、截图等（中文内容加 `l=schinese`）：
+
+```
+https://store.steampowered.com/api/appdetails?appids=000000&l=schinese
+```
+
+### 所有游戏列表
+
+获取 Steam 商店上的所有游戏列表（AppID + 名称），数据量较大：
+
+```
+https://api.steampowered.com/ISteamApps/GetAppList/v2/
+```
+
+---
+
+## 游戏资源
+
+### 游戏头图
+
+```
+https://cdn.cloudflare.steamstatic.com/steam/apps/{appid}/header.jpg
+```
+
+### 游戏胶囊图（纵向）
+
+```
+https://cdn.cloudflare.steamstatic.com/steam/apps/{appid}/library_600x900.jpg
+```
+
+### 游戏截图
+
+游戏截图 URL 可从 `appdetails` 接口的 `screenshots` 字段中获取。
+
+---
+
+## 便捷代理接口
+
+如果不想自己管理 API Key，可使用封装好的代理接口（以下为示例站点，数据仅供参考）：
+
+| 功能 | 接口示例 |
+|------|---------|
+| 个人信息 | `https://o.jk.sb/steam/profile/76561198887857717` |
+| 游戏库存 | `https://o.jk.sb/steam/games/76561198887857717` |
+| 最近游玩 | `https://o.jk.sb/steam/recentlyplayed/76561198887857717` |
+| 最近游玩（指定数量） | `https://o.jk.sb/steam/recentlyplayed/76561198887857717/3` |
+| 游戏成就 | `https://o.jk.sb/steam/achievements/76561198887857717/275850` |
+| 游戏封面（Base64） | `https://o.jk.sb/steam/imageurl2base64/275850` |
+
+---
+
+## 注意事项
+
+- 大部分用户相关接口需要**账号社区信息设为公开**，否则返回数据异常或为空
+- 不同类型的 Key（开发者 / 普通玩家）可访问的接口范围不同
+- API 存在速率限制，请勿频繁大量请求，否则 IP 可能被临时封禁
+- Steam 周年庆游玩回顾（Replay）页面：`https://store.steampowered.com/replay/{steamid}/{year}`
