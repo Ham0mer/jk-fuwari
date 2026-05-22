@@ -9,47 +9,35 @@ category: '教程'
 draft: false 
 lang: 'zh-CN'
 ---
-:::warning
-Remnawave Panel 不包括 Xray-core，因此您需要在单独的服务器上安装 Remnawave Node 才能使用 Remnawave 的所有功能。
-节点端也需要安装Docker
+:::note
+Remnawave Panel 不包含 Xray-core，因此需要在单独的服务器上安装 Remnawave Node 才能使用完整功能。节点端同样需要先安装 Docker。
 :::
 
-## 创建项目目录
+## 第一步 - 创建项目目录
 
-```js
+```bash
 mkdir /opt/remnanode && cd /opt/remnanode
 ```
 
-## 配置 .env 文件
+## 第二步 - 在面板添加节点
 
+进入面板的 `节点` → `管理`，点击 `+` 按钮添加新节点。
 
-```js
-nano .env
-```
+填写表单时注意 **Node Port** 字段，这是节点监听面板内部 API 请求的端口，不用于其他用途。
 
-.env 文件内容
-```sh title=".env"
-APP_PORT=2222
-
-SSL_CERT=CERT_FROM_MAIN_PANEL
-```
-:::tip
-`SSL_CERT` 值可以从 节点 → 管理 下的 面板 → 创建新节点 （按钮）中获取。复制按钮将添加到剪贴板。
-:::
+填好后点击 **`复制 docker-compose.yml`** 按钮，将配置复制到剪贴板。
 
 ![rem-02.png](/IMG/remna-install-2/02.png)
-```sh title=".env"
-APP_PORT=2222
 
-SSL_CERT="eyJub2RlQ2xxxxxxx......."
-```
-
-## 创建docker-compose.yml文件
+## 第三步 - 创建 docker-compose.yml 文件
 
 ```bash
-nano docker-compose.yml
+nano /opt/remnanode/docker-compose.yml
 ```
-```sh title="docker-compose.yml"
+
+将从面板复制的内容粘贴进去，生成的文件格式如下：
+
+```yaml title="docker-compose.yml"
 services:
     remnanode:
         container_name: remnanode
@@ -57,17 +45,28 @@ services:
         image: remnawave/node:latest
         restart: always
         network_mode: host
-        env_file:
-            - .env
+        environment:
+          - NODE_PORT=2222
+          - SECRET_KEY="supersecretkey"
 ```
 
-## 启动节点容器
+保存文件后启动容器：
+
+## 第四步 - 启动节点容器
 
 ```bash
 docker compose up -d && docker compose logs -f -t
 ```
 
-## 编辑xray配置文件
+## 第五步 - 完成节点关联
+
+回到面板的节点创建卡片，点击 **`下一步`**，选择所需的**配置文件（Config Profile）**，然后点击 **`创建`** 按钮完成关联。
+
+:::danger 防火墙安全提示
+**请务必在节点防火墙中将 `NODE_PORT` 仅对面板服务器的 IP 开放**，不要对公网开放此端口。
+:::
+
+## 编辑 Xray 配置文件
 
 ![rem-03.png](/IMG/remna-install-2/03.png)
 
@@ -168,8 +167,10 @@ docker compose up -d && docker compose logs -f -t
 
 ## 将配置文件与节点关联
 
-将配置文件与节点关联起来，需要在 节点 → 管理 下的 选中刚刚添加的节点，点击`更改配置文件`，选中改成创建的`xray配置文件`和入站标签,点击应用更改，再点击保存。
-当然进行到这一步依然无法使用节点。往下看
+如果需要更换已关联的配置文件，可在 `节点` → `管理` 中选中对应节点，点击`更改配置文件`，重新选择 Xray 配置文件和入站标签，点击应用更改后保存。
+
+完成配置文件关联后，节点仍无法直接使用，还需要继续创建主机。
+
 ![rem-05.png](/IMG/remna-install-2/05.png)
 
 ## 创建主机
