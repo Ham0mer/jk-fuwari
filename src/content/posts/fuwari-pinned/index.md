@@ -3,6 +3,7 @@ title: Fuwari 主题：添加文章置顶功能
 published: 2025-10-08 21:00:00
 description: '本教程详细介绍如何为Fuwari博客主题添加文章置顶功能，包括修改排序逻辑、配置文件和显示标签的完整步骤。'
 image: ''
+pinned: true
 tags: ['fuwari']
 category: '教程'
 draft: false 
@@ -11,8 +12,33 @@ lang: ''
 
 ## 修改工具文件
 
-### 修改排序逻辑
-`src\utils\content-utils.ts`,编辑文件，将 `getSortedPosts` 函数中的排序逻辑修改为：
+### 修改排序逻辑（一）
+
+`src/utils/content-utils.ts`，首先修改 `getRawSortedPosts` 函数。该函数被归档页面调用，同样需要加入置顶排序逻辑：
+
+```js
+async function getRawSortedPosts() {
+    const allBlogPosts = await getCollection("posts", ({ data }) => {
+        return import.meta.env.PROD ? data.draft !== true : true;
+    });
+
+    const sorted = allBlogPosts.sort((a, b) => {
+        // 如果一个是置顶一个不是置顶，置顶的排在前面
+        if (a.data.pinned !== b.data.pinned) {
+            return a.data.pinned ? -1 : 1;
+        }
+        // 都是置顶或都不是置顶，按发布日期时间排序（包含小时分钟秒）
+        const dateA = new Date(a.data.published);
+        const dateB = new Date(b.data.published);
+        return dateA > dateB ? -1 : 1;
+    });
+    return sorted;
+}
+```
+
+### 修改排序逻辑（二）
+
+接着修改 `getSortedPosts` 函数，该函数被首页和 RSS 等页面调用：
 
 ```js
 export async function getSortedPosts() {
@@ -43,7 +69,7 @@ export async function getSortedPosts() {
 }
 ```
 ### 修改文章配置文件
-`src\content\config.ts`,在`lang`字段后增加 `pinned` 字段
+`src/content/config.ts`，在 `lang` 字段后增加 `pinned` 字段
 
 ```js
 pinned: z.boolean().optional().default(false),
@@ -51,7 +77,7 @@ pinned: z.boolean().optional().default(false),
 
 ### 修改置顶显示标签
 
-`src\components\PostCard.astro`,此文件需要修改两处。
+`src/components/PostCard.astro`,此文件需要修改两处。
 
 #### 第一处：添加置顶标签判断
 
