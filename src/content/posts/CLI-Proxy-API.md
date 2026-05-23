@@ -1,6 +1,6 @@
 ---
 title: CLIProxyAPI 完全指南：将 AI CLI 工具统一转换为标准 API 服务
-published: 2026-05-23T02:04:04
+published: 2026-04-22T02:04:04
 description: '详细介绍 CLIProxyAPI 的安装、配置、多账号管理、API 调用、客户端接入等全流程，一个代理统一所有 AI 编程工具'
 image: ''
 pinned: false

@@ -24,45 +24,25 @@ Usage: npm run new-post -- <filename>`)
 }
 
 let fileName = args[0]
-const hasImgFlag = args.includes("img")
 
-// Add .md extension if not present
+// Normalize: remove .md/.mdx extension and trailing /index
 const fileExtensionRegex = /\.(md|mdx)$/i
-if (!fileExtensionRegex.test(fileName)) {
-  fileName += ".md"
-}
+fileName = fileName.replace(fileExtensionRegex, "")
+fileName = fileName.replace(/\/index$/i, "")
 
+const postDirName = fileName
 const targetDir = "./src/content/posts/"
-const fullPath = path.join(targetDir, fileName)
+const fullPath = path.join(targetDir, postDirName, "index.md")
 
 if (fs.existsSync(fullPath)) {
   console.error(`Error: File ${fullPath} already exists `)
   process.exit(1)
 }
 
-// recursive mode creates multi-level directories
-const dirPath = path.dirname(fullPath)
-if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true })
-}
-
-const postBaseName = path.basename(fileName, path.extname(fileName))
-if (hasImgFlag) {
-  let imgDirName = postBaseName
-  if (postBaseName.toLowerCase() === "index") {
-    imgDirName = path.basename(path.dirname(fullPath))
-  }
-  const imgDirPath = path.join("public", "IMG", imgDirName)
-  if (!fs.existsSync(imgDirPath)) {
-    fs.mkdirSync(imgDirPath, { recursive: true })
-    console.log(`Image folder ${imgDirPath} created`)
-  } else {
-    console.log(`Image folder ${imgDirPath} already exists`)
-  }
-}
+fs.mkdirSync(path.dirname(fullPath), { recursive: true })
 
 const content = `---
-title: ${postBaseName}
+title: ${postDirName}
 published: ${getDate()}
 description: ''
 image: ''

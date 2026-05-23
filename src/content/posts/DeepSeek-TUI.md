@@ -1,6 +1,6 @@
 ---
 title: DeepSeek-TUI：终端原生 AI 编程智能体完全指南
-published: 2026-05-23T02:11:25
+published: 2026-05-15T02:11:25
 description: '面向 DeepSeek V4 的终端原生编程智能体，支持 100 万 token 上下文、多种交互模式、子智能体并行、LSP 诊断等完整功能教程'
 image: ''
 pinned: false
