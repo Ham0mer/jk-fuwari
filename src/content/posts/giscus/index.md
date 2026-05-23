@@ -21,15 +21,14 @@ giscus 加载时，会使用 GitHub Discussions 搜索 API 根据选定的映射
 
 ## 配置giscus
 
-打开[giscus官网](https://giscus.app/)，填入仓库地址。
-自动生成下面的配置文件
+打开[giscus官网](https://giscus.app/)，填入仓库地址，选择 Discussion 分类和映射方式后，页面会自动生成配置脚本。其中 `data-repo-id` 和 `data-category-id` 是 giscus 根据你填写的仓库和分类自动生成的唯一标识，直接复制即可。
 
-```js
+```html
 <script src="https://giscus.app/client.js"
         data-repo="Ham0mer/giscus-fuwari"
-        data-repo-id="xxxx"
-        data-category="General"
-        data-category-id="xxxx"
+        data-repo-id="R_kgDOP-iBJw"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOP-iBJ84CwZLW"
         data-mapping="pathname"
         data-strict="0"
         data-reactions-enabled="1"
@@ -45,121 +44,31 @@ giscus 加载时，会使用 GitHub Discussions 搜索 API 根据选定的映射
 ## 创建/修改fuwari文件
 
 ### 创建GiscusComment
-在 `src\components\misc` 目录下面创建 `GiscusComment.astro`,将下方代码粘贴进去不需要修改。
-![image.png](https://img.cii.li/v2/K9GsJDL.png)
 
-```js title="GiscusComment.astro"
----
-interface Props {
-  repo: string;
-  repoId: string;
-  category: string;
-  categoryId: string;
-  mapping?: string;
-  reactionsEnabled?: boolean;
-  emitMetadata?: boolean;
-  inputPosition?: 'top' | 'bottom';
-  lang?: string;
-}
+在 `src/components/misc/` 目录下创建 `GiscusComment.astro`。该组件接收 `repo`、`repoId`、`category`、`categoryId` 等参数，动态加载 giscus 脚本，并监听主题变化自动切换 giscus 的亮/暗主题。
 
-const {
-  repo,
-  repoId,
-  category,
-  categoryId,
-  mapping = 'pathname',
-  reactionsEnabled = true,
-  emitMetadata = false,
-  inputPosition = 'bottom',
-  lang = 'zh-CN'
-} = Astro.props;
----
+组件代码可参考项目仓库中的 [GiscusComment.astro](https://github.com/Ham0mer/jk-fuwari/blob/master/src/components/misc/GiscusComment.astro)，核心逻辑：
 
-<div id="giscus-container"></div>
+- 根据页面 `dark` class 判断当前主题色，传给 giscus
+- 通过 `MutationObserver` 监听主题切换，用 `postMessage` 通知 giscus iframe 更新主题
 
-<script define:vars={{ repo, repoId, category, categoryId, mapping, reactionsEnabled, emitMetadata, inputPosition, lang }}>
-  function loadGiscus() {
-    const container = document.getElementById('giscus-container');
-    if (!container) return;
+### 引入到文章页面
 
-    // 获取当前主题
-    const isDark = document.documentElement.classList.contains('dark');
-    const theme = isDark ? 'dark' : 'light';
-
-    // 创建Giscus脚本
-    const script = document.createElement('script');
-    script.src = 'https://giscus.app/client.js';
-    script.setAttribute('data-repo', repo);
-    script.setAttribute('data-repo-id', repoId);
-    script.setAttribute('data-category', category);
-    script.setAttribute('data-category-id', categoryId);
-    script.setAttribute('data-mapping', mapping);
-    script.setAttribute('data-strict', '0');
-    script.setAttribute('data-reactions-enabled', reactionsEnabled ? '1' : '0');
-    script.setAttribute('data-emit-metadata', emitMetadata ? '1' : '0');
-    script.setAttribute('data-input-position', inputPosition);
-    script.setAttribute('data-theme', theme);
-    script.setAttribute('data-lang', lang);
-    script.setAttribute('data-loading', 'lazy');
-    script.crossOrigin = 'anonymous';
-    script.async = true;
-
-    container.appendChild(script);
-  }
-
-  // 监听主题变化
-  function updateGiscusTheme() {
-    const giscusFrame = document.querySelector('iframe[src*="giscus"]');
-    if (giscusFrame) {
-      const isDark = document.documentElement.classList.contains('dark');
-      const theme = isDark ? 'dark' : 'light';
-
-      giscusFrame.contentWindow.postMessage({
-        giscus: {
-          setConfig: {
-            theme: theme
-          }
-        }
-      }, 'https://giscus.app');
-    }
-  }
-
-  // 监听DOM变化来检测主题切换
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-        updateGiscusTheme();
-      }
-    });
-  });
-
-  // 页面加载时初始化
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadGiscus);
-  } else {
-    loadGiscus();
-  }
-
-  // 开始观察主题变化
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['class']
-  });
-</script>
-```
-
-### 通用引入方法
-
-例如我准备在文章页面引入评论，编辑 `src\pages\posts\[...slug].astro` 文件
-
-头部引入刚刚创建的文件
+编辑 `src/pages/posts/[...slug].astro`，在文件头部引入组件：
 
 ```js
 import GiscusComment from "../../components/misc/GiscusComment.astro";
 ```
 
-在下方找到你想放评论区的位置，粘贴下方代码
+在文章内容下方（License 之后、上一篇/下一篇导航之前）放入评论区：
 
 ```js
-<GiscusComment repo="csl0p/jksb" repoId="xxx" category="Announcements" categoryId="xxx" />
+<GiscusComment
+    repo="Ham0mer/giscus-fuwari"
+    repoId="R_kgDOP-iBJw"
+    category="Announcements"
+    categoryId="DIC_kwDOP-iBJ84CwZLW"
+/>
 ```
+
+`repoId` 和 `categoryId` 即上一步 giscus 官网生成的对应值，替换为你自己的即可。
