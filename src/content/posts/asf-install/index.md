@@ -2,7 +2,7 @@
 title: ASF + TGbot：Docker 部署指南
 published: 2025-10-05
 description: 'ASF 是一个帮助您轻松获得 Steam 卡牌掉落的程序，支持多账号和 Web UI 管理'
-image: '/IMG/asf-install.jpg'
+image: './images/asf-install.jpg'
 tags: ['ASF','TGbot','Docker']
 category: '教程'
 draft: false

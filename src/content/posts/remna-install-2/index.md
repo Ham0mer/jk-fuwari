@@ -2,7 +2,7 @@
 title: Remnawave 节点管理面板：节点篇
 published: 2025-10-18T17:16:41
 description: 'Remnawave节点管理面板Docker部署及节点配置教程'
-image: '/IMG/remna-install-2/01.webp'
+image: './images/01.webp'
 pinned: false
 tags: ['Remnawave', 'Docker', '节点配置']
 category: '教程'
@@ -27,7 +27,7 @@ mkdir /opt/remnanode && cd /opt/remnanode
 
 填好后点击 **`复制 docker-compose.yml`** 按钮，将配置复制到剪贴板。
 
-![rem-02.png](/IMG/remna-install-2/02.png)
+![rem-02.png](./images/02.png)
 
 ## 第三步 - 创建 docker-compose.yml 文件
 
@@ -68,7 +68,7 @@ docker compose up -d && docker compose logs -f -t
 
 ## 编辑 Xray 配置文件
 
-![rem-03.png](/IMG/remna-install-2/03.png)
+![rem-03.png](./images/03.png)
 
 ### vless+tcp+reality配置
 
@@ -163,7 +163,7 @@ docker compose up -d && docker compose logs -f -t
 
 `publicKey`和`privateKey`,可以在下方工具栏生成
 
-![rem-04.png](/IMG/remna-install-2/04.png)
+![rem-04.png](./images/04.png)
 
 ## 将配置文件与节点关联
 
@@ -171,24 +171,24 @@ docker compose up -d && docker compose logs -f -t
 
 完成配置文件关联后，节点仍无法直接使用，还需要继续创建主机。
 
-![rem-05.png](/IMG/remna-install-2/05.png)
+![rem-05.png](./images/05.png)
 
 ## 创建主机
 在这就是将入站真正的开启并监听端口
 选择主机 → 创建主机
 备注自定义，选择入站配置文件为刚刚创建的`test1`，点击应用更改
-![rem-06.png](/IMG/remna-install-2/06.png)
+![rem-06.png](./images/06.png)
 可以看到端口自动填入了`30004`，地址要填绑定了节点的IP的域名，将右上角按钮到开启状态，
-![rem-07.png](/IMG/remna-install-2/07.png)
+![rem-07.png](./images/07.png)
 至此可以看到入站为如下状态
-![rem-08.png](/IMG/remna-install-2/08.png)
+![rem-08.png](./images/08.png)
 
 ## 最后一步
 完成以上的步骤是99%，剩下1%是将配置文件赋予给用户。
 进入内部分组，编辑默认分组文件，将配置文件赋予给分组，点击应用更改，再点击保存。
-![rem-10.png](/IMG/remna-install-2/10.png)
+![rem-10.png](./images/10.png)
 
 现在可以再用户列表选中用户，看到订阅链接。
-![rem-09.png](/IMG/remna-install-2/09.png)
+![rem-09.png](./images/09.png)
 
 此面板玩法极其丰富，适合几个人合租使用。

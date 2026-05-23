@@ -2,7 +2,7 @@
 title: Telegram 双向机器人：验证码版部署
 published: 2025-11-14T23:40:01
 description: '通过验证码屏蔽垃圾广告的双向私信机器人！'
-image: '/IMG/banad-tgbot/01.jpg'
+image: './images/01.jpg'
 pinned: false
 tags: ['TG机器人','屏蔽广告']
 category: '工具'

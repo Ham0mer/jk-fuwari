@@ -2,7 +2,7 @@
 title: Maddy：自建邮件服务器指南
 published: 2025-09-06
 description: '从零开始用 Docker 搭建 maddy 自建邮件服务器，包含 DNS、DKIM、SPF、DMARC 配置及账户管理。'
-image: '/IMG/maddy-mail.jpg'
+image: './images/maddy-mail.jpg'
 tags: ['mail', 'Docker']
 category: '工具'
 draft: false
