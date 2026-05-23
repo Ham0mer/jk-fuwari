@@ -57,12 +57,12 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/cblightfinal.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 	name: "业余玩家",
-	bio: "爱国 敬业 诚信 友善",
+	bio: "主业医药代表",
 	links: [
 		{
-			name: "游戏",
-			icon: "fa6-brands:steam",
-			url: "https://steamcommunity.com/profiles/76561198887857717/",
+			name: "telegram",
+			icon: "fa6-brands:telegram",
+			url: "https://t.me/waw_loli",
 		},
 		{
 			name: "状态",
