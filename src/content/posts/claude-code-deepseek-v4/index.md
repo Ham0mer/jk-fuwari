@@ -1,5 +1,5 @@
 ---
-title: Claude Code 对接 DeepSeek V4 Pro 完整指南
+title: Claude Code 对接 DeepSeek V4 Pro：完整配置指南
 published: 2026-05-23T12:49:50
 description: 'Claude Code CLI 和 VSCode 插件对接 DeepSeek V4 Pro 的配置详解，包含环境变量、模型映射和常见问题。'
 image: ''

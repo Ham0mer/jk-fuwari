@@ -1,5 +1,5 @@
 ---
-title: CPA Usage Keeper 完全指南：CLIProxyAPI 用量追踪与可视化面板
+title: CPA Usage Keeper：CLIProxyAPI 用量追踪与可视化面板
 published: 2026-05-23T02:04:04
 description: '详细介绍 CPA Usage Keeper 的安装部署、配置、Dashboard 功能、Nginx 反代等全流程，为 CLIProxyAPI 补充用量持久化与统计分析能力'
 image: ''

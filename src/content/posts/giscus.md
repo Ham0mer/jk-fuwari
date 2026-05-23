@@ -1,5 +1,5 @@
 ---
-title: 给fuwari主题添加giscus评论区
+title: Fuwari 主题：集成 Giscus 评论区
 published: 2025-10-08
 description: '本教程详细介绍如何为Fuwari博客主题集成giscus评论系统，包括GitHub仓库配置、giscus设置、创建评论组件以及在文章页面中引入评论区的完整步骤。'
 image: ''

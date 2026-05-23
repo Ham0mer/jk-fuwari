@@ -1,5 +1,5 @@
 ---
-title: Remnawave节点管理面板-节点篇
+title: Remnawave 节点管理面板：节点篇
 published: 2025-10-18T17:16:41
 description: 'Remnawave节点管理面板Docker部署及节点配置教程'
 image: '/IMG/remna-install-2/01.webp'

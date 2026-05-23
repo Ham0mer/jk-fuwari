@@ -1,5 +1,5 @@
 ---
-title: 检测网络联通性 & generate_204 服务汇总
+title: generate_204：网络连通性检测服务汇总
 published: 2025-10-27T13:19:07
 description: '什么是 generate_204？原理是什么？国内外主流 generate_204 服务地址汇总，含国内厂商（小米、华为、Vivo）及 Google、Apple、Cloudflare 等。'
 image: ''

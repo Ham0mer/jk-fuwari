@@ -1,5 +1,5 @@
 ---
-title: Seedbox 一键安装与 PT 刷流指南
+title: Seedbox：一键安装与 PT 刷流指南
 published: 2025-09-06
 description: '使用 jerry048 一键脚本搭建 qBittorrent Seedbox，含 autobrr、Vertex 刷流工具配置与网络优化说明'
 image: ''
