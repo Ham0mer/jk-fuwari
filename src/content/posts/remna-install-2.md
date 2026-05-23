@@ -4,7 +4,7 @@ published: 2025-10-18T17:16:41
 description: 'Remnawave节点管理面板Docker部署及节点配置教程'
 image: '/IMG/remna-install-2/01.webp'
 pinned: false
-tags: ['Remnawave','节点管理面板','Docker','节点配置']
+tags: ['Remnawave', 'Docker', '节点配置']
 category: '教程'
 draft: false 
 lang: 'zh-CN'

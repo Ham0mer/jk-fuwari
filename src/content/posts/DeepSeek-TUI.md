@@ -4,7 +4,7 @@ published: 2026-05-15T02:11:25
 description: '面向 DeepSeek V4 的终端原生编程智能体，支持 100 万 token 上下文、多种交互模式、子智能体并行、LSP 诊断等完整功能教程'
 image: ''
 pinned: false
-tags: ['AI', 'DeepSeek', 'CLI', '终端', '编程工具']
+tags: ['AI', 'DeepSeek', 'CLI']
 category: '工具'
 draft: false
 lang: 'zh-CN'
