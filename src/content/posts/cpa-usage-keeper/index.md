@@ -131,7 +131,7 @@ cp .env.example .env
 vim .env
 ```
 
-```env title=".env"
+```ini title=".env"
 CPA_BASE_URL=http://host.docker.internal:8317
 CPA_MANAGEMENT_KEY=replace-with-your-management-key
 REDIS_QUEUE_ADDR=host.docker.internal:8317
@@ -339,7 +339,7 @@ server {
 
 如果 CPA 管理页和 Keeper 使用同一域名，"返回 CPA"按钮会自动跳转到同源 `/management.html`，无需额外配置 `CPA_PUBLIC_URL`。如果 CPA 在其他域名或端口，请设置：
 
-```env
+```ini
 # 示例：CPA 部署在独立域名
 CPA_PUBLIC_URL=https://cpa.example.com
 ```
