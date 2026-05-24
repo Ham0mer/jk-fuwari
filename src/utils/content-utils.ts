@@ -45,7 +45,7 @@ export async function getSortedPosts() {
 		sorted[i].data.prevSlug = sorted[i + 1].slug;
 		sorted[i].data.prevTitle = sorted[i + 1].data.title;
 	}
-	
+
 	return sorted;
 }
 export type PostForList = {
