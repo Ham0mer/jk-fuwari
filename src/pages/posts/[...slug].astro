@@ -1,12 +1,12 @@
 ---
-import path from "node:path";
 import License from "@components/misc/License.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
-import { getSortedPosts } from "@utils/content-utils";
-import { getDir, getPostUrlBySlug } from "@utils/url-utils";
+import { getPostSlug, getPostSourceDir, getSortedPosts } from "@utils/content-utils";
+import { getPostUrlBySlug } from "@utils/url-utils";
+import { render } from "astro:content";
 import { Icon } from "astro-icon/components";
 import { gitHubEditConfig, licenseConfig } from "src/config";
 import ImageWrapper from "../../components/misc/ImageWrapper.astro";
@@ -18,15 +18,14 @@ import GiscusComment from "../../components/misc/GiscusComment.astro";
 export async function getStaticPaths() {
 	const blogEntries = await getSortedPosts();
 	return blogEntries.map((entry) => ({
-		params: { slug: entry.slug },
+		params: { slug: getPostSlug(entry) },
 		props: { entry },
 	}));
 }
 
 const { entry } = Astro.props;
-const { Content, headings } = await entry.render();
-
-const { remarkPluginFrontmatter } = await entry.render();
+const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+const postSlug = getPostSlug(entry);
 
 const jsonLd = {
 	"@context": "https://schema.org",
@@ -99,7 +98,7 @@ const jsonLd = {
             <!-- always show cover as long as it has one -->
 
             {entry.data.image &&
-                <ImageWrapper id="post-cover" src={entry.data.image} basePath={path.join("content/posts/", getDir(entry.id))} class="mb-8 rounded-xl banner-container onload-animation"/>
+                <ImageWrapper id="post-cover" src={entry.data.image} basePath={getPostSourceDir(entry)} class="mb-8 rounded-xl banner-container onload-animation"/>
             }
 
 
@@ -144,7 +143,7 @@ const jsonLd = {
                             <div class="flex-1">
                                 <p class="text-black/80 dark:text-white/80 text-sm mb-1">发现错误或想要改进这篇文章？</p>
                                 <a 
-                                    href={`${gitHubEditConfig.baseUrl}/${entry.slug}.md`}
+                                    href={`${gitHubEditConfig.baseUrl}/${postSlug}.md`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="inline-flex items-center gap-1 text-[var(--primary)] hover:text-[oklch(0.65_0.16_var(--hue))] text-sm font-medium transition-colors"
@@ -162,7 +161,7 @@ const jsonLd = {
 
 
 
-            {licenseConfig.enable && <License title={entry.data.title} slug={entry.slug} pubDate={entry.data.published} class="mb-6 rounded-xl license-container onload-animation"></License>}
+            {licenseConfig.enable && <License title={entry.data.title} slug={postSlug} pubDate={entry.data.published} class="mb-6 rounded-xl license-container onload-animation"></License>}
             
         </div>
     </div>
