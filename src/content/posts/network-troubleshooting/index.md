@@ -35,15 +35,12 @@ UDP       12        8         4
 
 `timewait 65497`——TIME_WAIT 已经把可用端口塞满了。这就是后面要讲的第一个坑。直观感受一下：
 
-```text
- 本地端口范围   32768 ───────────────────────────── 60999
-                ┌──────────────────────────────────────┐
- 端口占用       │ ████████████████████████████████████ │  ← TIME_WAIT 把池子吃光
-                └──────────────────────────────────────┘
-                                  │
-                                  ▼
-                  新连接 connect() → EADDRNOTAVAIL
-                  curl / 业务调用看到的就是"超时 / 失败"
+```mermaid
+flowchart TD
+    A["短连接大量主动关闭"] --> B["TIME_WAIT 堆积"]
+    B --> C["本地端口范围 32768-60999 被占满"]
+    C --> D["connect() → EADDRNOTAVAIL"]
+    D --> E["curl / 业务调用看到超时或失败"]
 ```
 
 :::tip
@@ -65,26 +62,26 @@ UDP       12        8         4
 
 TCP 主动关闭方在四次挥手后会进入 **TIME_WAIT** 状态，停留 `2 * MSL`（Linux 内核里写死了 60 秒，对应 `TCP_TIMEWAIT_LEN`）：
 
-```text
-   主动关闭方                          被动关闭方
-   ──────────                          ──────────
-  ESTABLISHED                         ESTABLISHED
-       │                                   │
-       │ ───────── FIN ──────────────▶     │
-  FIN_WAIT_1                               │
-       │ ◀───────── ACK ──────────────     │ CLOSE_WAIT
-  FIN_WAIT_2                               │  (应用还没 close)
-       │                                   │
-       │ ◀───────── FIN ──────────────     │ LAST_ACK
-       │ ───────── ACK ──────────────▶     │
-   TIME_WAIT                            CLOSED
-       │
-       │   2 × MSL = 60s
-       │   ↑ 等待两个 MSL，确保：
-       │     ① 最后那个 ACK 真的送达
-       │     ② 旧连接的迟到报文在网络中自然消亡
-       ▼
-    CLOSED
+```mermaid
+sequenceDiagram
+    participant A as 主动关闭方
+    participant B as 被动关闭方
+    Note over A,B: 双方 ESTABLISHED
+    A--)B: FIN (主动关闭)
+    A->>A: FIN_WAIT_1
+    B->>B: CLOSE_WAIT
+    B--)A: ACK
+    A->>A: FIN_WAIT_2
+    Note over B: 应用还没 close()
+    B--)A: FIN
+    B->>B: LAST_ACK
+    A--)B: ACK
+    A->>A: TIME_WAIT
+    B->>B: CLOSED
+    Note over A: 等待 2×MSL=60s
+    Note over A: ①保证最后ACK送达
+    Note over A: ②让旧报文在网络中消亡
+    A->>A: CLOSED
 ```
 
 这个等待是必要的，目的是：
@@ -164,42 +161,25 @@ net.ipv4.tcp_timestamps = 1
 
 排查之前先建立一张"包从网线到应用"的全景图，每一层都可能默默丢包，下面的 5 个步骤就是按这张图自底向上走的：
 
-```text
- ┌──────────────────────────────────────────────────────────────┐
- │  应用层                                                       │
- │     ┌──────────────┐                                         │
- │     │  accept() 队列│  ← 第 2 步：ListenOverflows / Backlog drop
- │     └──────┬───────┘                                         │
- ├────────────┼─────────────────────────────────────────────────┤
- │  传输层    │   TCP / UDP                                      │
- │     ┌──────▼───────┐    ┌──────────┐                         │
- │     │ recv buffer  │    │ SYN 队列  │  ← TcpExtListenDrops    │
- │     └──────────────┘    └──────────┘                         │
- ├──────────────────────────────────────────────────────────────┤
- │  网络层 / netfilter                                           │
- │     ┌────────────────────┐                                   │
- │     │ conntrack 表       │  ← 第 3 步：table full → 静默丢包   │
- │     └────────────────────┘                                   │
- │     ┌────────────────────┐                                   │
- │     │ iptables / nftables│  ← DROP / REJECT                  │
- │     └────────────────────┘                                   │
- ├──────────────────────────────────────────────────────────────┤
- │  软中断 (softirq / RPS)                                       │
- │     ┌────────────────────┐                                   │
- │     │ per-CPU backlog    │  ← netdev_max_backlog 满          │
- │     └────────────────────┘                                   │
- ├──────────────────────────────────────────────────────────────┤
- │  网卡驱动                                                     │
- │     ┌────────────────────┐                                   │
- │     │ RX ring buffer     │  ← 第 1 步：rx_dropped / fifo_err  │
- │     └────────────────────┘                                   │
- ├──────────────────────────────────────────────────────────────┤
- │  物理网卡 / 线缆                                              │
- │     ←───────────── 报文从这里进来 ─────────────               │
- └──────────────────────────────────────────────────────────────┘
-                                          ↑
-                                     抓不到包就上 tcpdump (第 4 步)
-                                     还是定位不到就 dropwatch (第 5 步)
+```mermaid
+flowchart TB
+    subgraph s1["① 网卡驱动"]
+        A["RX ring buffer — rx_dropped / fifo_err"]
+    end
+    subgraph s2["② 传输层"]
+        B["SYN 队列 — TcpExtListenDrops"]
+        C["accept() 队列 — ListenOverflows"]
+    end
+    subgraph s3["③ 网络层 / netfilter"]
+        D["conntrack 表 — table full → 静默丢包"]
+        E["iptables / nftables — DROP / REJECT"]
+    end
+    subgraph s4["④ 软中断"]
+        F["per-CPU backlog — netdev_max_backlog 满"]
+    end
+    subgraph s5["⑤ 还抓不到包？上 tcpdump / bpftrace"]
+    end
+    A --> B --> C --> D --> E --> F --> s5
 ```
 
 ### 第 1 步：先看网卡层有没有丢
@@ -341,42 +321,35 @@ dropwatch -l kas
 
 九成是 **MTU 不匹配 + ICMP 被防火墙吞了**，也就是教科书上说的 **Path MTU Discovery 黑洞**。
 
-```text
-                  ┌──── 中间链路 MTU = 1400 ────┐
-   Client                                          Server
-   MTU=1500  ──── 物理网卡 ────  ──── 物理网卡 ──── MTU=1500
-
-   ① 小包 (1200B, DF=1)
-      ────●─────────────────────────────●────▶   ✓ 顺利通过
-
-   ② 大包 (1500B, DF=1)
-      ────●─────────╳                   ●        ✗ 在中间链路被丢
-                    │
-                    │  路由器本应回送 ICMP Type 3 Code 4
-                    ▼  "Fragmentation Needed, MTU=1400"
-                    ╳  被防火墙整段 ban 掉 ICMP → 发送方完全不知情
-                          │
-                          ▼
-                    持续按 1500 重传 → 应用层看到的现象就是
-                    "能 ping 通、能建连、一传大包就卡死"
+```mermaid
+flowchart TD
+    A["发送数据包 1500B, DF=1"] --> B{"中间链路 MTU?"}
+    B -->|"MTU=1500 ✓"| C["正常通过"]
+    B -->|"MTU=1400 ✗"| D["路由器丢弃"]
+    D --> E["应回送 ICMP Type 3 Code 4 (Frag. Needed, MTU=1400)"]
+    E --> F{"防火墙允许 ICMP?"}
+    F -->|"是"| G["发送方降低 MSS → 正常通信"]
+    F -->|"否，被 ban"| H["发送方完全不知情"]
+    H --> I["持续按 1500 重传"]
+    I --> J["现象：TCP 握手成功但传不动数据"]
 ```
 
 ### 原理
 
 TCP 协商时会基于本地 MTU 算 MSS（`MSS = MTU - 40`），一张图看清各字段在以太帧里占的位置：
 
-```text
- ┌──── Ethernet 帧 (链路层) ─────────────────────────────────────┐
- │ DMAC 6│ SMAC 6│ Type 2│           Payload ≤ MTU (默认1500)    │
- └───────┴───────┴───────┴───────────────────────────────────────┘
-                         │
-                         ▼
-                ┌──── IP 包  (MTU = 1500) ───────────────────────┐
-                │ IP 头 20  │ TCP 头 20 │   TCP 数据 ≤ MSS = 1460 │
-                └───────────┴───────────┴─────────────────────────┘
-                                         ↑
-                          MSS = MTU − IP头(20) − TCP头(20) = 1460
-                          IPv6 / TCP 时间戳选项启用时再各扣几字节
+```mermaid
+flowchart TD
+    subgraph eth["Ethernet 帧 — 链路层"]
+        direction LR
+        E1["DMAC (6B)"] --- E2["SMAC (6B)"] --- E3["Type (2B)"] --- E4["Payload ≤ MTU (1500B)"]
+    end
+    eth -->|"解封装"| ip
+    subgraph ip["IP 包 — 网络层"]
+        direction LR
+        I1["IP 头 (20B)"] --- I2["TCP 头 (20B)"] --- I3["TCP 数据 ≤ MSS (1460B)"]
+    end
+    I3 -.- N["MSS = MTU − IP头(20) − TCP头(20) = 1460"]
 ```
 
 当数据包经过中间链路（VPN、隧道、运营商 PPPoE）时，链路 MTU 可能比两端都小。本来应该靠 ICMP `Fragmentation Needed (Type 3, Code 4)` 通知发送方降低分片大小，但很多防火墙傻乎乎把所有 ICMP 全 ban 了，于是发送方既不知道要分片，又因为 IP 头有 DF 标记不能在中间分片——大包就这样被静默吞掉。

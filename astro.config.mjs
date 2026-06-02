@@ -1,3 +1,4 @@
+import mermaid from 'astro-mermaid';
 import sitemap from "@astrojs/sitemap";
 import svelte from "@astrojs/svelte";
 import tailwind from "@astrojs/tailwind";
@@ -98,6 +99,9 @@ export default defineConfig({
 			frames: {
 				showCopyToClipboardButton: false,
 			}
+		}),
+		mermaid({
+			autoTheme: true,
 		}),
         svelte(),
 		sitemap(),
